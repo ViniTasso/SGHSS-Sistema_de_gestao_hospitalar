@@ -6,7 +6,7 @@ services:
     build: ./sghss-monolith
     container_name: sghss-monolith
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - ./sghss-monolith:/app
     environment:
@@ -19,7 +19,7 @@ services:
     build: ./authentication-service
     container_name: authentication-service
     ports:
-      - "8001:8001"
+      - "8002:8002"
     volumes:
       - ./authentication-service:/app
     environment:
@@ -54,6 +54,17 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=user
       - MONGO_INITDB_ROOT_PASSWORD=password
 
+  # Serviço de Conexao com Inteligencia Articial
+  ai-service:
+    build: ./ai-service
+    container_name: ai-service
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./ai-service:/app
+    env_file:
+      - ./ai-service/.env
 volumes:
   postgres_data:
   mongodb_data:
+

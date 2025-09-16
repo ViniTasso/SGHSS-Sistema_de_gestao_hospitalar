@@ -1,0 +1,4 @@
+#Criar um ambiente virtual sudo apt install python3.12-venv
+#python3 -m venv venv #para criar um ambiente virtual
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+pip install Flask PyMongo Flask-PyMongo PyJWT python-dotenv

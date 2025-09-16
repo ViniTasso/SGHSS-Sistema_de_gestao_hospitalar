@@ -13,7 +13,7 @@ project_structure = {
     'authentication-service': {
         'app': {
             'api': ['auth_routes.py'],
-            'core': ['auth_logic.py'],
+            'core': ['auth_logic.py', 'db_connection.py'], # Adicionado db_connection.py aqui
             'models': ['user_model.py']
         },
         'files': ['Dockerfile', 'requirements.txt']
@@ -52,7 +52,7 @@ def create_structure(base_path, structure):
                 file_path.touch(exist_ok=True)
 
 # Define o caminho base como o diretório atual
-base_directory = Path('..')
+base_directory = Path('.')
 
 # Inicia a criação da estrutura
 print("Iniciando a criação da estrutura do projeto SGHSS...")
