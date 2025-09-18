@@ -6,20 +6,23 @@ services:
     build: ./sghss-monolith
     container_name: sghss-monolith
     ports:
-      - "8001:8001"
+      - "8001:8000"
     volumes:
       - ./sghss-monolith:/app
     environment:
       - DATABASE_URL=postgres://user:password@db-postgres:5432/sghss_db
     depends_on:
       - db-postgres
+      - authentication-service # Adicione a dependência do serviço de autenticação
+      - ai-service # Adicione a dependência do serviço de IA
+
 
   # Microsserviço de Autenticação
   authentication-service:
     build: ./authentication-service
     container_name: authentication-service
     ports:
-      - "8002:8002"
+      - "8002:8001"
     volumes:
       - ./authentication-service:/app
     environment:
@@ -59,7 +62,7 @@ services:
     build: ./ai-service
     container_name: ai-service
     ports:
-      - "8003:8003"
+      - "8003:8002"
     volumes:
       - ./ai-service:/app
     env_file:

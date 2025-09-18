@@ -1,0 +1,73 @@
+#version: '3.8' na versão antiga era importante, na nova 2.0 não precisa
+
+services:
+  # Monolito principal (Sistema de Gestão)
+  sghss-monolith:
+    build: ./sghss-monolith
+    container_name: sghss-monolith
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./sghss-monolith:/app
+    environment:
+      - DATABASE_URL=postgres://user:password@db-postgres:5432/sghss_db
+    depends_on:
+      - db-postgres
+      - authentication-service # Adicione a dependência do serviço de autenticação
+      - ai-service # Adicione a dependência do serviço de IA
+
+
+  # Microsserviço de Autenticação
+  authentication-service:
+    build: ./authentication-service
+    container_name: authentication-service
+    ports:
+      - "8002:8001"
+    volumes:
+      - ./authentication-service:/app
+    environment:
+      - MONGO_URL=mongodb://user:password@db-mongodb:27017/auth_db
+    depends_on:
+      - db-mongodb
+
+  # Banco de Dados PostgreSQL para o monolito
+  db-postgres:
+    image: postgres:13
+    container_name: db-postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./databases/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=sghss_db
+
+  # Banco de Dados MongoDB para o serviço de autenticação
+  db-mongodb:
+    image: mongo:4.4
+    container_name: db-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./databases/mongodb/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=user
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  # Serviço de Conexao com Inteligencia Articial
+  ai-service:
+    build: ./ai-service
+    container_name: ai-service
+    ports:
+      - "8003:8002"
+    volumes:
+      - ./ai-service:/app
+    env_file:
+      - ./ai-service/.env
+volumes:
+  postgres_data:
+  mongodb_data:
+
