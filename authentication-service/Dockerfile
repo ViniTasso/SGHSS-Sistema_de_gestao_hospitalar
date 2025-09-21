@@ -26,4 +26,4 @@ EXPOSE 8001
 # 7. Define o comando para iniciar a aplicação.
 # O "flask run" é o comando padrão para o servidor de desenvolvimento do Flask.
 # O "--host 0.0.0.0" permite que o servidor seja acessível de fora do contêiner.
-CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8001"]
+CMD ["flask", "--app", "app.app", "run", "--host", "0.0.0.0", "--port", "8001"]

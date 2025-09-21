@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 8003
 
-CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8002"]
+CMD ["flask", "--app", "app.app", "run", "--host", "0.0.0.0", "--port", "8002"]
+
+#CMD ["flask", "run", "--host", "0.0.0.0", "--port", "8002"]
