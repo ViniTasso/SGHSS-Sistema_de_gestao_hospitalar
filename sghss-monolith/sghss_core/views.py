@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import json
 from django.db import transaction
-from accounts_1.models import User, Role
+from accounts.models import User, Role
 from patients.models import Patient
 
 AUTH_SERVICE_URL = 'http://authentication-service:8001/api/auth/login'
