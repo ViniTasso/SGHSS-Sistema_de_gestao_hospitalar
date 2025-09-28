@@ -24,7 +24,7 @@ def init_db(app):
         print("Conexão com o MongoDB estabelecida com sucesso!")
 
     except Exception as e:
-        print(f"Erro ao conectar ao MongoDB: {e}")
+        print(f"Erro ao tentar conectar ao MongoDB: {e}")
         mongo_client = None # Garante que o cliente é None em caso de falha
 
 def get_db():

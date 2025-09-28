@@ -22,7 +22,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # Adicione seus novos módulos aqui
+    # Adicione seus novos módulos a partir daqui
     #'accounts.apps.AccountsConfig',
     #'patients.apps.PatientsConfig',
     'accounts',
@@ -58,4 +58,4 @@ MIDDLEWARE = [
 ALLOWED_HOSTS = ['localhost', '127.0.0.1'] #Para resolver o erro de rodar em produção -->>> sghss-monolith          | CommandError: You must set settings.ALLOWED_HOSTS if DEBUG is False. sghss-monolith exited with code 1 
 AUTH_USER_MODEL = 'accounts.User' #O AUTH_USER_MODEL é crucial para dizer ao Django que a sua classe User personalizada é a que deve ser usada para o sistema de autenticação.
 ROOT_URLCONF = 'sghss_core.urls'
-SECRET_KEY = 'sua_chave_secreta_aqui_QUE_NO_FIM_NAO_SERVE_PRA_NADA'
+SECRET_KEY = 'MINHA_SECRET_KEY_QUE_NO_FIM_NAO_SERVE_PRA_NADA'

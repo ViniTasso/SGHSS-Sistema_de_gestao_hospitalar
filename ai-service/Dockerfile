@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8003
+EXPOSE 8002
 
 CMD ["flask", "--app", "app.app", "run", "--host", "0.0.0.0", "--port", "8002"]
 

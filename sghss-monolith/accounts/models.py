@@ -1,5 +1,19 @@
 # Create your models here.
 # sghss-monolith/accounts/models.py
+"""
+A regra de nomenclatura do Django para tabelas do banco de dados é a seguinte:
+
+Nome da Tabela=nome_da_app_nome_da_classe_do_modelo
+
+para cada classe dentro de Models, será criado uma nova tabela
+
+accounts_Role
+accounts_CustomUserManager
+accounts_User
+accounts_Permission 
+
+"""
+
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
@@ -68,5 +82,30 @@ class User(AbstractBaseUser, PermissionsMixin):
         id           | uuid                     |           | not null | 
 
     """
+
     def __str__(self):
         return self.username
+
+class Permission(models.Model):
+    nome_acao = models.CharField(max_length=255, unique=True)
+    descricao = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.nome_acao
+
+class RolePermission(models.Model):
+    #Tabela MUITOS para MUITOS
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+    permission = models.ForeignKey(Permission, on_delete=models.CASCADE)
+
+    class Meta:
+        """ CLASSE ANINHADA - REGRA D RESTRIÇÃO COMPOSTA
+        Primary Key Compost
+        Reflexo no Banco de Dados:
+            O Django cria uma restrição ou índice único no banco de dados que impede que a mesma Role tenha a mesma Permission registrada mais de uma vez.
+            Por exemplo, a combinação (Administrador, Ler Relatórios) só pode existir uma vez.
+        """
+        unique_together = ('role', 'permission')
+
+    def __str__(self):
+        return f"{self.role.nome} tem permissão para {self.permission.nome_acao}"

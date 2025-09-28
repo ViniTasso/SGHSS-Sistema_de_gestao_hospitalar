@@ -19,6 +19,8 @@ O Docker não cria máquinas virtuais, mas sim **containers**, que são ambiente
   * `docker compose logs [serviço]`: Exibe os logs de um serviço específico.
   * `docker compose run --rm [serviço] [comando]`: Executa um comando em um contêiner temporário, ideal para tarefas administrativas (como migrações).
   * `docker compose exec -it [serviço] [comando]`: Executa um comando em um contêiner em execução, permitindo acessar o shell (`bash`).
+  * `docker network ls`: Permite virificar as redes criadas pelo Docker. rm -nome_da_rede- para remover.
+
 
 ### **1.3. Configurando Dockerfile**
 
@@ -46,6 +48,36 @@ O `docker-compose.yml` orquestra múltiplos contêineres em uma única rede.
 
   * A porta **interna** é definida no **`Dockerfile` (`EXPOSE`)** e na segunda parte do `ports` no `docker-compose.yml` (`:8001`).
   * A porta **externa** é definida na primeira parte do `ports` (`8002:`). Essa é a porta que você acessa via `localhost`.
+  * Existe diferença em EXPOSE e --publish | EXPOSE porta, por onde o docker vai comunicar; --publish portaExt, por onde vai acessar no localhost:portaExt, como a imagem tem o EXPOSE ao acessar a docker o tratamento interno não importa.
+  * porta_local:porta_container
+  * Comando para rodar Docker em porta específica:
+    * docker run -d -p portaLocalHost:portaInterna sua_imagem_app
+    * docker run -P <imagem_docker> -> esse comando usa a porta interna do EXPOSE,  e escolhe uma aleatória para o Localhost. Para usar o conteiner é preciso rodar `docker ps` para descobrir qual foi a porta usada, só depois `localhost:<portausada>`
+
+#### **1.5.1. Conflito de portas internas**
+  * Contêineres são Isolados, mas os Recursos Internos Têm Limites quando usar um **Namespace** com Docker Compose.
+  * o Docker isola (recursos de sistema) e o que ele compartilha (o kernel e as regras de rede).
+
+  1. **Namespaces no Docker Compose e Projetos Separados**
+  * Isolamento de Namespace de Rede: O Docker Compose é o orquestrador que garante o isolamento.
+
+  * Um único arquivo docker-compose.yml cria um único namespace de rede (uma rede virtual privada) para todos os seus serviços, onde o conflito de portas internas é possível.
+
+  * **Dois projetos diferentes** (rodando em pastas separadas, com seus próprios docker-compose.yml) iniciam em Namespaces de Rede separados e, portanto, **não há conflito de portas internas**.
+
+  * Contêineres são unidades isoladas, cada um com seu próprio sistema de arquivos, processos e interfaces de rede. No entanto, o Docker (e o Kubernetes) usa um modelo chamado contenção de recursos ou namespace, não uma máquina virtual completa.
+  
+  2. **O Ponto de Conflito: A Porta TCP/IP**
+  * Se dois serviços (contêineres) estão na mesma rede (padrão no Docker Compose), eles não podem rodar aplicativos que tentam escutar na mesma porta TCP/IP interna (ex: dois apps tentando usar a porta 8000). Isso gera um erro, pois o kernel do sistema operacional só permite que um único processo aloque aquele recurso lógico.
+  * Conflito: Se o Serviço 1 tenta iniciar um servidor que escuta na **porta 8000** e o Serviço 2 tenta iniciar outro servidor que também escuta na **porta 8000**, o kernel do sistema operacional dirá: **"A porta 8000 já está em uso por outro processo"**.
+
+  3. **Dois projetos, cada um com seu próprio docker-compose.yml**
+
+  * Cria uma Rede Exclusiva: Para o Projeto A, ele cria uma rede interna (ex: projeto_a_default).
+
+  * Cria Outra Rede Exclusiva: Para o Projeto B, ele cria outra rede interna (ex: projeto_b_default).
+  * é possiǘel dois conteiner usar a mesma porta **se estão em docker-compose diiferente.**
+  
 
 ### **1.6. Comandos Internos do Docker**
 
@@ -58,6 +90,11 @@ O `docker-compose.yml` orquestra múltiplos contêineres em uma única rede.
   * **Desenvolvimento**: Use `docker compose up` com **`volumes`** para sincronizar código em tempo real, sem reconstruir a imagem a cada alteração.
   * **Produção**: Use `docker compose up` sem `volumes` e com o comando **`COPY`** no Dockerfile para criar uma imagem autocontida e portátil.
   * **Rebuildar Após Alteração**: Use `docker compose up -d --no-deps --build authentication-service` ou `docker compose up --build -d --no-deps sghss-monolith` para recriar a imagem de uma docker específica, nesse caso monolith. Use `-d` para manter o serviço em backstage. Use **--no-deps** para não recriar as dependências.
+  * **Desfazer as Dockers que estão rodando**: Usar `docker compose down --volumes` para e remove os contêineres.
+  * **LIMPEZA DE IMAGENS E ARQUIVOS**: Para retirar todo caches e garantir que o ambiente comece novamente, USE: `docker compose down --volumes --rmi all`; ele remove as imagens padrão, remove as versões internas do compose latest etc...
+  * **LIMPEZA TOTAL**
+  * `docker system prune -a --force` Force uma limpeza de sistema mais profunda, que remove redes, caches e imagens não utilizados. (Use com cautela, pois isso limpará tudo que não estiver em uso, incluindo outras imagens e caches **não relacionados ao seu projeto.**)
+  
 
 ### **1.8. Solicitação de Serviços**
 
@@ -96,11 +133,6 @@ Certifique-se de que os contêineres *específico* do banco de dados estejam em 
 Bash
 
 `docker compose up -d db-postgres`
-
-Rode o comando migrate para aplicar a **todas** migrações:
-Bash
-
-`docker compose run --rm sghss-monolith python manage.py migrate`
 
 #### **1.10.2. MIGRAÇÃO MANUAL**
 
@@ -275,11 +307,11 @@ curl -X POST http://localhost:8003/api/ai/chat -d '{"prompt": "O que é um pront
 ## 4\. Comandos para Solicitar Serviços do Docker
 
   * **Para API de Autenticação:**
-    `curl -X POST http://localhost:8002/api/auth/login`
+    `curl -X POST http://localhost:8060/api/auth/login`
   * **Para API de IA:**
-    `curl -X POST http://localhost:8003/api/ai/chat`
+    `curl -X POST http://localhost:8070/api/ai/chat`
   * **Para API de Cadastro de Paciente:**
-    `curl -X POST http://localhost:8001/api/patients/register/`
+    `curl -X POST http://localhost:8050/api/patients/register/`
 
 -----
 

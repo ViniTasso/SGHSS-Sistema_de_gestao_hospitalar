@@ -1,10 +1,10 @@
 from flask import Blueprint, request, jsonify
 # from ..core.auth_logic import ... (vamos adicionar isso depois)
-#import jwt somente se for necessário
+import jwt somente se for necessário
 import os
 
-# Definir a chave secreta do JWT
-SECRET_KEY = os.environ.get('SECRET_KEY', 'sua_chave_secreta_aqui')
+# Definir a chave secreta do JWT SECRET_KEY = 'MINHA_SECRET_KEY_QUE_NO_FIM_NAO_SERVE_PRA_NADA'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'MINHA_SECRET_KEY_QUE_NO_FIM_NAO_SERVE_PRA_NADA')
 
 auth_bp = Blueprint('auth_bp', __name__)
 
@@ -44,9 +44,9 @@ def validate():
 
     
     """
-    ESSE É O INICIO DA NOVA AUTHENTICAÇÃO
+    #ESSE É O INICIO DA NOVA AUTHENTICAÇÃO
 
-    PRECISA ADEQUAR O CÓDIGO PARA CONSEGUIR USAR TOKENS VERDADEIROS
+    #PRECISA ADEQUAR O CÓDIGO PARA CONSEGUIR USAR TOKENS VERDADEIROS
 
     try:
         # A lógica de validação do token e decodificação

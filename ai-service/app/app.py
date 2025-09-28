@@ -17,5 +17,5 @@ def home():
     return "Serviço de IA está online!", 200
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8003)) # Nova porta para o serviço de IA
+    port = int(os.environ.get('PORT', 8002)) # Nova porta para o serviço de IA
     app.run(host='0.0.0.0', port=port)

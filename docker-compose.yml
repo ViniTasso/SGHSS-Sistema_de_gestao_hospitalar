@@ -1,4 +1,4 @@
-#version: '3.8' the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion 
+#version: '3.8' na versão antiga era importante, na nova 2.0 não precisa
 
 services:
   # Monolito principal (Sistema de Gestão)
@@ -6,7 +6,7 @@ services:
     build: ./sghss-monolith
     container_name: sghss-monolith
     ports:
-      - "8001:8000"
+      - "8050:8000"
     volumes:
       - ./sghss-monolith:/app
     environment:
@@ -22,7 +22,7 @@ services:
     build: ./authentication-service
     container_name: authentication-service
     ports:
-      - "8002:8001"
+      - "8060:8001"
     volumes:
       - ./authentication-service:/app
     environment:
@@ -62,7 +62,7 @@ services:
     build: ./ai-service
     container_name: ai-service
     ports:
-      - "8003:8002"
+      - "8070:8002"
     volumes:
       - ./ai-service:/app
     env_file:

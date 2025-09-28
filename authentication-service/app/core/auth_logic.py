@@ -18,7 +18,7 @@ def init_db():
         )
         print("Conexão com o MongoDB estabelecida com sucesso!")
     except Exception as e:
-        print(f"Erro ao conectar ao MongoDB: {e}")
+        print(f"Errou ao conectar ao MongoDB: {e}")
         # Considerar encerrar a aplicação em caso de falha crítica
 
 # Chame a função de inicialização na sua aplicação principal

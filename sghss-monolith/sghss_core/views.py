@@ -31,6 +31,10 @@ def login_view(request):
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Timeout:
+            return JsonResponse({'error': 'Time Out'}, status=400)
+        except ConnectionError:
+            return JsonResponse({'error': 'Não foi possível continuar, faça contato com o suporte'}, status=400)
     
     return JsonResponse({'error': 'Método não permitido'}, status=405)
 

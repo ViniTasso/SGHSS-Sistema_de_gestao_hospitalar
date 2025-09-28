@@ -18,7 +18,7 @@ python3 -m venv venv
 source venv/bin/activate  # No Windows: venv\Scripts\activate
 pip install Flask PyMongo Flask-PyMongo PyJWT python-dotenv
 
-    Flask: O microframework web que usaremos.
+    Flask: O microframework web que é usado.
 
     PyMongo: O driver oficial para conectar ao MongoDB.
 

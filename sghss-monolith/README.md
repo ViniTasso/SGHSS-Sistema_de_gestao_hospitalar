@@ -46,3 +46,13 @@ URL Dispatcher: É um sistema poderoso para mapear URLs para suas Views, o que t
 Segurança: O Django já vem com recursos de segurança integrados para proteger contra ameaças comuns, como injeção de SQL, Cross-Site Scripting (XSS) e Cross-Site Request Forgery (CSRF).
 
 Sistema de autenticação: Um sistema completo de autenticação e permissões de usuário já está pronto para ser usado.
+
+# Concedendo Permissão com Role Permission
+
+1. docker compose run --rm sghss-monolith python manage.py shell
+2. Executar o bloco:
+* from accounts.models import Role, Permission, RolePermission
+* visualizar_prontuario = Permission.objects.create(nome_acao='visualizar_prontuario', descricao='Pode visualizar prontuários de pacientes.')
+* paciente_role = Role.objects.get(nome='paciente')
+* RolePermission.objects.create(role=paciente_role, permission=visualizar_prontuario)
+* exit()
