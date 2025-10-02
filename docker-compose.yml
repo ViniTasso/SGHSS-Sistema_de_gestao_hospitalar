@@ -14,7 +14,7 @@ services:
     depends_on:
       - db-postgres
       - authentication-service # Adicione a dependência do serviço de autenticação
-      - ai-service # Adicione a dependência do serviço de IA
+      - hyper-connection # Adicione a dependência do serviço de IA
 
 
   # Microsserviço de Autenticação
@@ -67,7 +67,27 @@ services:
       - ./ai-service:/app
     env_file:
       - ./ai-service/.env
+  # Conteiner que gerencia todas as requisições    
+  hyper-connection:
+    build: ./hyper-connection
+    # build: 
+    #   context: ./hyper-connection
+    #   dockerfile: Dockerfile
+    container_name: hyper-connection
+    ports: 
+      - "8080:8003" #adicionar o '-' torna o campo uma Array
+    #para desenvolvimento em tempo real
+    volumes:
+      - ./hyper-connection:/app
+    # Para comunicar com outros serviços seria interessante criar uma rede
+    #networks:
+      #- sghss-network
+
 volumes:
   postgres_data:
   mongodb_data:
 
+# Configuração manual da rede. O compose cria automaticamente, manual para ter controle dos nomes e referências
+# networks:
+#   sghss-network:
+#     driver: bridge

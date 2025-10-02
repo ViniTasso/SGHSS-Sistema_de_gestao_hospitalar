@@ -23,7 +23,7 @@ def jwt_required(f):
                 AUTH_SERVICE_VALIDATE_URL,
                 headers={'Authorization': f'Bearer {token}'}
             )
-            print("")
+            
             if response.status_code == 200:
                 # 3. Se o token for válido, adiciona os dados do usuário à requisição e continua
                 request.user_data = response.json()

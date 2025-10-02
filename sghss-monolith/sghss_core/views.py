@@ -9,7 +9,8 @@ import os
 #Middleware reutilizado para segurança do endpoint - Funcao auxiliar
 from .decorators import jwt_required
 
-AUTH_SERVICE_URL = 'http://authentication-service:8001/api/auth/login'
+AUTH_SERVICE_URL = 'http://authentication-service:8060/api/auth/login'
+#VALIDATE_SERVICE_URL = 'http://authentication-service:8001/api/auth/validate'
 
 @csrf_exempt
 def login_view(request):
@@ -108,6 +109,11 @@ def get_patient_record_view(request, patient_id):
     permissions = user_data.get('permissions', [])
     if 'visualizar_prontuario' not in permissions:
         return JsonResponse({'error': 'Permissão negada'}, status=403)
-
-    # Se a permissão existir, a lógica de negócio continua
-    return JsonResponse({'message': f'Acesso concedido ao prontuário do paciente {patient_id}'}, status=200)
+    user_id = user_data.get('user_id')
+    if user_id == str(patient_id):
+        # Se a permissão existir, a lógica de negócio continua
+        return JsonResponse({'message': f'Acesso concedido ao prontuário do paciente {patient_id}'}, status=200)
+    else:
+        return JsonResponse({'message': f'Acesso concedido ao prontuário do paciente {user_id} que e diferente do que fez a requisição'}, status=200)
+    
+    #return JsonResponse({'message': f'Acesso concedido ao prontuário do paciente {patient_id}'}, status=200)

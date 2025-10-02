@@ -18,7 +18,7 @@ O Docker não cria máquinas virtuais, mas sim **containers**, que são ambiente
   * `docker compose ps`: Lista os contêineres em execução.
   * `docker compose logs [serviço]`: Exibe os logs de um serviço específico.
   * `docker compose run --rm [serviço] [comando]`: Executa um comando em um contêiner temporário, ideal para tarefas administrativas (como migrações).
-  * `docker compose exec -it [serviço] [comando]`: Executa um comando em um contêiner em execução, permitindo acessar o shell (`bash`).
+  * `docker compose exec -it [serviço] [comando]`: Executa um comando em um contêiner em execução, permitindo acessar o shell (`bash`). Ex: `docker run -it --entrypoint /bin/sh [NOME_DA_IMAGEM]`
   * `docker network ls`: Permite virificar as redes criadas pelo Docker. rm -nome_da_rede- para remover.
 
 
@@ -87,6 +87,7 @@ O `docker-compose.yml` orquestra múltiplos contêineres em uma única rede.
 
 ### **1.7. Construção com Compose e Manutenção**
 
+  * **COMANDO SEM O COMPOSE**: Faria o build de uma docker apenas, definindo o nome dela depois do -t `docker build -t ai-service .`
   * **Desenvolvimento**: Use `docker compose up` com **`volumes`** para sincronizar código em tempo real, sem reconstruir a imagem a cada alteração.
   * **Produção**: Use `docker compose up` sem `volumes` e com o comando **`COPY`** no Dockerfile para criar uma imagem autocontida e portátil.
   * **Rebuildar Após Alteração**: Use `docker compose up -d --no-deps --build authentication-service` ou `docker compose up --build -d --no-deps sghss-monolith` para recriar a imagem de uma docker específica, nesse caso monolith. Use `-d` para manter o serviço em backstage. Use **--no-deps** para não recriar as dependências.
@@ -105,6 +106,7 @@ O `docker-compose.yml` orquestra múltiplos contêineres em uma única rede.
 ### **1.9. Acompanhamento por Log**
 
 Logs do Docker (`docker compose logs [serviço]`) são a única forma de depurar erros em ambientes de containers. Telas "travadas" geralmente indicam que o container está ocioso, aguardando conexões.
+
 
 ### **1.10. MIGRAÇÕES**
 

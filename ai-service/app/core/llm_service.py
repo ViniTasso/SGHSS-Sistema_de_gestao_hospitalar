@@ -8,7 +8,8 @@ def generate_content(prompt: str) -> str:
     """
     Envia um prompt para o modelo Gemini e retorna a resposta.
     """
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    #model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     response = model.generate_content(prompt)
 
     return response.text
