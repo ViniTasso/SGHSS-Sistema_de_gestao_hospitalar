@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import requests
+from requests.exceptions import Timeout, ConnectionError, RequestException
 import json
 from django.db import transaction
 from accounts.models import User, Role
@@ -9,7 +10,7 @@ import os
 #Middleware reutilizado para segurança do endpoint - Funcao auxiliar
 from .decorators import jwt_required
 
-AUTH_SERVICE_URL = 'http://authentication-service:8060/api/auth/login'
+AUTH_SERVICE_URL = 'http://authentication-service:8001/api/auth/login'
 #VALIDATE_SERVICE_URL = 'http://authentication-service:8001/api/auth/validate'
 
 @csrf_exempt
@@ -27,15 +28,37 @@ def login_view(request):
             # Retorna a resposta do microsserviço para o frontend
             if response.status_code == 200:
                 return JsonResponse(response.json(), status=200)
+            if response.status_code == 301:
+                return JsonResponse({'error': "A URL informada está com problema"}, status=301)
+            # 2. Tratamento Específico para o 500
+            elif response.status_code == 500:
+                # Tente obter a mensagem de erro do JSON do serviço externo, 
+                # ou use uma mensagem genérica de "falha do servidor".
+                try:
+                    error_message = response.json().get('error', 'Erro interno no servidor de autenticação.')
+                except json.JSONDecodeError:
+                    error_message = 'Erro interno no servidor de autenticação. Resposta inválida.'
+                
+                return JsonResponse({'error': error_message}, status=500)
+            # 3. Tratamento para outros códigos de status (4xx, outros 5xx)
             else:
+                # O restante dos códigos de erro (ex: 400, 401, 403, 404, 502, etc.)
                 return JsonResponse(response.json(), status=response.status_code)
 
+        
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
         except Timeout:
             return JsonResponse({'error': 'Time Out'}, status=400)
-        except ConnectionError:
-            return JsonResponse({'error': 'Não foi possível continuar, faça contato com o suporte'}, status=400)
+        except ConnectionError as e:
+            print(f"Erro inesperado durante a requisição em Connection Error: {e}") # Log o erro para debug
+            return JsonResponse({'error': 'Nao foi possivel continuar, faca contato com o suporte'}, status=400)
+        except RequestException as e:
+            print(f"Erro inesperado durante a requisição em RequestException: {e}") # Log o erro para debug
+            return JsonResponse({'error': 'Um erro inesperado ocorreu ao tentar contatar o servidor.'}, status=500)
+        except Exception as e:
+            print(f"Erro inesperado durante a requisição em Exception: {e}") # Log o erro para debug
+            return JsonResponse({'error': 'Houve um erro que ainda nao foi tratado. Contate o HelpDesks'})
     
     return JsonResponse({'error': 'Método não permitido'}, status=405)
 

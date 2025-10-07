@@ -1,3 +1,37 @@
+# Estrutura do Sistema
+authentication-service/
+├── app/
+│   ├── api/
+│   │   └── auth_routes.py      # Rotas da API (/login, /validate)
+│   ├── core/
+│   │   ├── auth_logic.py       # Lógica de negócio (tokens, credenciais)
+│   │   └── db_connection.py    # Gerenciamento de conexões (Postgres + Mongo)
+│   └── models/
+│       └── user_model.py       # (vazio - modelo de usuário)
+├── app.py                      # Entry point da aplicação
+└── requirements.txt            # Dependências Python
+
+# Funcionalidades Implementadas
+1. Endpoint /api/auth/login (POST)
+
+Recebe username e password via JSON
+Valida credenciais no PostgreSQL
+Verifica hash de senha (compatível com Django PBKDF2)
+Retorna token JWT válido por 1 hora
+
+2. Endpoint /api/auth/validate (GET)
+
+Recebe token JWT no header Authorization: Bearer <token>
+Valida e decodifica o token
+Retorna user_id e permissões simuladas
+Trata erros de token expirado/inválido
+
+3. Gerenciamento de Conexões
+
+Cria novas conexões PostgreSQL a cada requisição
+Mantém conexão MongoDB persistente
+Tratamento de erros de banco de dados (DatabaseError, OperationalError)
+
 ## Pymongo
 Eu só consegui instalar o pip install pymongo mongoengine
 depois que criou o espaco virtual venv

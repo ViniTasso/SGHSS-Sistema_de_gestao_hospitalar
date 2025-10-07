@@ -4,6 +4,7 @@ import jwt #somente se for necessário
 import os
 from datetime import timedelta, datetime
 import logging
+from ..core.auth_logic import criar_token, verificar_credenciais, decode_token, get_user_permissions
 
 # Definir a chave secreta do JWT SECRET_KEY = 'MINHA_SECRET_KEY_QUE_NO_FIM_NAO_SERVE_PRA_NADA'
 SECRET_KEY = os.environ.get('SECRET_KEY', 'MINHA_SECRET_KEY_QUE_NO_FIM_NAO_SERVE_PRA_NADA')
@@ -20,36 +21,17 @@ def login():
     username = data.get('username')
     password = data.get('password')
 
-    # A lógica de autenticação e geração de token viria aqui
-    # Por enquanto, é apenas um placeholder
-    if username == 'test' and password == 'test':
-        # Gera e retorna um JWT
-        #token = "seu-jwt-aqui"
-        token = criar_token(1)
+    # Verifica credenciais no PostgreSQL
+    user_id, error_message = verificar_credenciais(username, password)
+
+    if user_id:
+        # Se as credenciais estiverem corretas, cria o token
+        logging.warning(f"DEBUG: User ID Recuperado: '{user_id}'")
+        token = criar_token(user_id) 
         return jsonify({"token": token}), 200
-
-    return jsonify({"message": "Credenciais inválidas"}), 401
-
-#@auth_bp.route('/login/', methods=['POST'])
-#def login():
-
-def criar_token(user_id):
-    # Payload
-    payload = {
-        'user_id': user_id,
-        # Define a expiração para 1 hora a partir de agora
-        'exp': datetime.utcnow() + timedelta(hours=1),
-        # Define o momento de emissão
-        'iat': datetime.utcnow(),
-    }
-    
-    # Codifica o token
-    token = jwt.encode(
-        payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
-    return token
+    else:
+        # Retorna a mensagem de erro da função verificar_credenciais
+        return jsonify({"message": error_message}), 401
 
 @auth_bp.route('/validate', methods=['GET'])
 def validate():
@@ -62,23 +44,17 @@ def validate():
     token = auth_header.split(' ')[1]
     
     try:
-        # A lógica de validação do token e decodificação
-        # O 'verify' abaixo deve ser implementado por você, mas aqui está um exemplo
-        # Se você usar a biblioteca PyJWT, a decodificação já faz a validação
-        decoded_token = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-        
-        # A partir daqui, você pode buscar os dados do usuário no seu banco de dados
-        # O 'sub' no token geralmente contém o user_id
-        logging.info(decoded_token)
-        user_id = decoded_token.get('user_id')
         
         # Crie a lógica para obter os dados do usuário, permissões, etc.
         # Exemplo: user_data = db.get_user(user_id)
-        
+        user_id = decode_token(token)
+
+        permissions = get_user_permissions(user_id)
+
         # Retorne os dados para o monolito
         return jsonify({
             'user_id': user_id,
-            'permissions': ['visualizar_prontuario'] # Exemplo de permissões
+            'permissions': permissions
         }), 200
 
     except jwt.ExpiredSignatureError:
@@ -100,3 +76,28 @@ def validate():
     #PRECISA ADEQUAR O CÓDIGO PARA CONSEGUIR USAR TOKENS VERDADEIROS
 
     """
+
+# @auth_bp.rout('/get_users', methods['POST'])
+# def get_users():
+#     conn = get_postgres_conn()
+#     if not conn:
+#         return None, "Serviço de banco de dados indisponível."
+
+#     # Busca o user_id e o hash da senha
+#     sql = "SELECT * FROM accounts_user"
+    
+#     try:
+#         with conn.cursor() as cur:
+#             # Atenção: O cursor precisa ser fechado/liberado após o uso
+#             cur.execute(sql)
+#             result = cur.fetchone()
+
+#         if result:
+#             return jsonify({"usuarios":  result}),200
+        
+#         return jsonify({"error":  "Nao existe usuario cadastrado"}),200
+
+#     except Exception as e:
+#         print(f"Erro na consulta SQL: {e}")
+#         # Retorne um erro genérico de credenciais para evitar vazamento de informações
+#         return None, "Credenciais inválidas."
