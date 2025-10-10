@@ -43,6 +43,7 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=sghss_db
+      - POSTGRES_HOST=db-postgres
 
   # Banco de Dados MongoDB para o serviço de autenticação
   db-mongodb:

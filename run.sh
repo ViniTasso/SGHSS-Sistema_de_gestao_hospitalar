@@ -121,10 +121,22 @@ rebuild() {
 # -----------------------------------------------------
 
 # Comando: migrate - Roda as migrações do Django
+#V2 Roda também o Superuser
 migrate() {
     info "Rodando migrações (makemigrations e migrate)..."
     docker compose run --rm "$MONO_SERVICE" python manage.py makemigrations accounts patients
     docker compose run --rm "$MONO_SERVICE" python manage.py migrate
+    docker compose run --rm "$MONO_SERVICE" python manage.py createsuperuser
+    """O superusuário (superuser) é uma conta especial no Django que tem todas as permissões (is_superuser=True). 
+    Ele é necessário para:
+    1. Acessar o Painel Admin: O painel de administração do Django é a forma mais rápida de gerenciar as Roles, 
+        Permissions, Patients e outras classes que você criou. Sem um superusuário, o painel fica inacessível.
+    2. Configuração Inicial: Você precisa dele para criar as Roles iniciais (médico, administrador, 
+        se o seu seed script falhar ou for removido).
+    3. Testes de Permissão: Ele serve como o usuário mestre para testar se a sua lógica de permissão 
+        está funcionando corretamente (por exemplo, garantir que um superusuário possa ver um 
+        rontuário, enquanto um paciente não pode).
+    """
 }
 
 # Comando: seed - Roda o script de seed de permissões
@@ -249,10 +261,10 @@ dev() {
     
     log "Preparando ambiente..."
     mkdir -p data/{uploads,processing,results,logs}
-    docker-compose down --remove-orphans 2>/dev/null || true
+    docker compose down --remove-orphans 2>/dev/null || true
     
     log "Build das imagens..."
-    docker-compose build
+    docker compose build
     
     echo ""
     echo "Iniciando desenvolvimento..."
@@ -270,7 +282,7 @@ dev() {
     echo "  Pressione Ctrl+C para parar"
     echo ""
     
-    docker-compose --profile dev up
+    docker compose --profile dev up
 }
 
 # Comando: prod - Produção (background)
@@ -374,6 +386,11 @@ status() {
         echo "Nenhum container rodando"
         echo "Execute 'sudo bash run.sh dev' ou 'sudo bash run.sh prod'"
     fi
+}
+
+#Comando para testar a estrutura
+test_structure() {
+    docker exec -it sghss-monolith ls -la /app/logs/
 }
 
 revert_last_commit() {
@@ -523,6 +540,7 @@ main() {
         logs)           logs "${2:-all}" ;;
         rebuild)        rebuild_service "${service_map[${2}]}" ;;
         test_access)    test_access ;;
+        test_structure) test_structure;;
         -h|--help|help|*) _help ;;
     esac
 }

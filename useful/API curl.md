@@ -7,9 +7,9 @@ curl -X GET http://localhost:8050/api/patients/5e8c12a5-6353-4a72-96da-d6f77fd53
 
 curl -X GET http://localhost:8050/api/patients/fd1c0913-9139-4205-bb01-3e5cb9ae3d8f/ -H "Authorization: Bearer [seu-jwt-aqui]"
 
-curl -X GET http://localhost:8050/api/patients/dd057a7e-db95-4977-bdef-5a9591f442e3/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NTkwMzg0NTcsImlhdCI6MTc1OTAzNDg1N30.fA9qmjVK05zzKytUbXs3KJt_6bq0c_KbY_AMHkb0A00"
+curl -X GET http://localhost:8050/api/patients/dd057a7e-db95-4977-bdef-5a9591f442e3/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5Njc3MjU5LCJpYXQiOjE3NTk2NzM2NTl9.EJZ9cRaiSRAWXsPXxjw7t24F1ZSHm-jAXMsUrHoOssk"
 
-curl -X GET http://localhost:8060/api/auth/validate -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE3NTkwMzg0NTcsImlhdCI6MTc1OTAzNDg1N30.fA9qmjVK05zzKytUbXs3KJt_6bq0c_KbY_AMHkb0A00"
+curl -X GET http://localhost:8060/api/auth/validate -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5ODA2OTE1LCJpYXQiOjE3NTk4MDMzMTV9.Mxei8foyQqnmADPJwq5sR1NyChvobHbVoxj38Rye2EA"
 
 
 Login de Autenticação
@@ -26,3 +26,20 @@ curl -X POST http://localhost:8070/api/ai/chat -H "Content-Type: application/jso
 
 curl -X POST http://localhost:8070/api/ai/chat -d '{"prompt": "O que é um prontuário médico?"}'
 
+
+
+test.user.17596323
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5NjcxOTUzLCJpYXQiOjE3NTk2NjgzNTN9.2XGsn_7YQw6WD5gBO0OjY7O_44-SB3HRcUyVueuBqAM
+
+test.user.17596060
+
+id
+91075dee-eb91-42d8-97d2-c8bf2766e963
+Paciente Teste 17596060
+
+0888f4a8-4a54-42e3-a8b3-118fedb191cc
+17596061
+
+dd057a7e-db95-4977-bdef-5a9591f442e3
+17596323
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5ODA2OTE1LCJpYXQiOjE3NTk4MDMzMTV9.Mxei8foyQqnmADPJwq5sR1NyChvobHbVoxj38Rye2EA

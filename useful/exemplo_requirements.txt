@@ -1,0 +1,101 @@
+# ==================== DJANGO CORE ====================
+Django==4.2.7
+djangorestframework==3.14.0
+
+# ==================== DATABASE ====================
+# Driver PostgreSQL
+psycopg2-binary==2.9.9
+
+# ==================== AUTENTICAÇÃO E SEGURANÇA ====================
+# Suporte CORS para comunicação frontend-backend
+django-cors-headers==4.3.0
+
+# Biblioteca para hashing de senhas compatível com Django
+passlib==1.7.4
+
+# JWT Token handling (se necessário no Django)
+PyJWT==2.8.0
+
+# ==================== REQUESTS E HTTP ====================
+# Para fazer requisições HTTP ao authentication-service
+requests==2.31.0
+
+# ==================== ENVIRONMENT VARIABLES ====================
+# Gerenciamento de variáveis de ambiente
+python-decouple==3.8
+
+# Alternativa: python-dotenv
+# python-dotenv==1.0.0
+
+# ==================== VALIDAÇÃO DE DADOS ====================
+# Validação de CPF, CNPJ, etc.
+validate-docbr==1.10.0
+
+# ==================== UPLOAD E PROCESSAMENTO DE ARQUIVOS ====================
+# Manipulação de imagens (para exames)
+Pillow==10.1.0
+
+# Leitura de PDFs
+PyPDF2==3.0.1
+
+# ==================== FERRAMENTAS DE DESENVOLVIMENTO ====================
+# Debugging
+ipdb==0.13.13
+
+# Code formatting
+black==23.11.0
+
+# Linting
+flake8==6.1.0
+
+# ==================== PRODUÇÃO ====================
+# Servidor WSGI para produção
+gunicorn==21.2.0
+
+# Servir arquivos estáticos
+whitenoise==6.6.0
+
+# ==================== MONITORAMENTO ====================
+# Sentry para monitoramento de erros (opcional)
+# sentry-sdk==1.38.0
+
+# ==================== TESTES ====================
+# Framework de testes
+pytest==7.4.3
+pytest-django==4.7.0
+
+# Cobertura de testes
+coverage==7.3.2
+
+# Factory para criar objetos de teste
+factory-boy==3.3.0
+
+# ==================== DOCUMENTAÇÃO ====================
+# Auto-geração de documentação da API
+drf-yasg==1.21.7
+
+# ==================== CELERY (OPCIONAL - Para tarefas assíncronas) ====================
+# celery==5.3.4
+# redis==5.0.1
+
+# ==================== DJANGO EXTENSIONS ====================
+# Ferramentas úteis para desenvolvimento
+django-extensions==3.2.3
+
+# ==================== TIMEZONE ====================
+# Gerenciamento de timezone
+pytz==2023.3.post1
+
+# ==================== NOTAS DE INSTALAÇÃO ====================
+
+# Para instalar todas as dependências:
+# pip install -r requirements.txt
+
+# Para instalar apenas dependências de produção (exclua as seções de desenvolvimento e testes):
+# pip install Django djangorestframework psycopg2-binary django-cors-headers passlib PyJWT requests python-decouple validate-docbr Pillow PyPDF2 gunicorn whitenoise pytz
+
+# Para criar um arquivo requirements.txt do seu ambiente atual:
+# pip freeze > requirements.txt
+
+# Para atualizar todas as dependências para as versões mais recentes:
+# pip install --upgrade -r requirements.txt

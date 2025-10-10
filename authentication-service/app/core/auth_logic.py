@@ -10,7 +10,7 @@ Este módulo contém as funções para:
 """
 
 #PRECISA de pip install pymongo mongoengine
-from mongoengine import connect
+#from mongoengine import connect
 from .db_connection import get_postgres_conn, set_postgres_conn
 import jwt
 from datetime import datetime, timedelta

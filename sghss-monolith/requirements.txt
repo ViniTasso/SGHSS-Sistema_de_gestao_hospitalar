@@ -1,3 +1,32 @@
+# ==================== DJANGO CORE ====================
 Django~=4.2
+# ==================== DATABASE ====================
+# Driver PostgreSQL
 psycopg2-binary
+# ==================== REQUESTS E HTTP ====================
+# Para fazer requisições HTTP ao authentication-service
 requests
+
+
+# EM USO AGORA:
+#Django==4.2.7
+#psycopg2-binary==2.9.9
+# ==================== AUTENTICAÇÃO E SEGURANÇA ====================
+# Suporte CORS para comunicação frontend-backend
+django-cors-headers==4.3.0
+#requests==2.31.0
+# ==================== ENVIRONMENT VARIABLES ====================
+# Gerenciamento de variáveis de ambiente
+python-decouple==3.8
+# Alternativa: python-dotenv
+# python-dotenv==1.0.0
+# ==================== TIMEZONE ====================
+# Gerenciamento de timezone
+pytz==2023.3.post1
+
+# FUTURO:
+# ==================== DJANGO CORE ====================
+# djangorestframework==3.14.0   # #será implementado
+# ==================== UPLOAD E PROCESSAMENTO DE ARQUIVOS ====================
+# Manipulação de imagens (para exames)
+# Pillow==10.1.0                # #será implementado
