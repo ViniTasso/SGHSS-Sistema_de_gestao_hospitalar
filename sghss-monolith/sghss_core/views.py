@@ -9,9 +9,12 @@ from patients.models import Patient
 import os
 #Middleware reutilizado para segurança do endpoint - Funcao auxiliar
 from .decorators import jwt_required
+import logging
 
 AUTH_SERVICE_URL = 'http://authentication-service:8001/api/auth/login'
 #VALIDATE_SERVICE_URL = 'http://authentication-service:8001/api/auth/validate'
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 @csrf_exempt
 def login_view(request):
@@ -21,7 +24,7 @@ def login_view(request):
             data = json.loads(request.body)
             username = data.get('username')
             password = data.get('password')
-
+            logging.warning(f"DEBUG: User: {username} Password Hash: '{password}'")
             # Envia a requisição para o microsserviço de autenticação
             response = requests.post(AUTH_SERVICE_URL, json={'username': username, 'password': password})
             

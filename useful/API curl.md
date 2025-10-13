@@ -7,15 +7,15 @@ curl -X GET http://localhost:8050/api/patients/5e8c12a5-6353-4a72-96da-d6f77fd53
 
 curl -X GET http://localhost:8050/api/patients/fd1c0913-9139-4205-bb01-3e5cb9ae3d8f/ -H "Authorization: Bearer [seu-jwt-aqui]"
 
-curl -X GET http://localhost:8050/api/patients/dd057a7e-db95-4977-bdef-5a9591f442e3/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5Njc3MjU5LCJpYXQiOjE3NTk2NzM2NTl9.EJZ9cRaiSRAWXsPXxjw7t24F1ZSHm-jAXMsUrHoOssk"
+curl -X GET http://localhost:8050/api/patients/fec052b2-b303-4d6a-b9e2-59c28ccb4d29/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmVjMDUyYjItYjMwMy00ZDZhLWI5ZTItNTljMjhjY2I0ZDI5IiwiZXhwIjoxNzYwMzI1OTM2LCJpYXQiOjE3NjAzMjIzMzZ9.O9ozxc9rTQEVKFyUopQ6GMOM5Hrn-WeipIBbEZWc7YA"
 
-curl -X GET http://localhost:8060/api/auth/validate -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5ODA2OTE1LCJpYXQiOjE3NTk4MDMzMTV9.Mxei8foyQqnmADPJwq5sR1NyChvobHbVoxj38Rye2EA"
+curl -X GET http://localhost:8060/api/auth/validate -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmVjMDUyYjItYjMwMy00ZDZhLWI5ZTItNTljMjhjY2I0ZDI5IiwiZXhwIjoxNzYwMzI1OTM2LCJpYXQiOjE3NjAzMjIzMzZ9.O9ozxc9rTQEVKFyUopQ6GMOM5Hrn-WeipIBbEZWc7YA"
 
 
 Login de Autenticação
 curl -X POST http://localhost:8050/api/auth/login/ -H "Content-Type: application/json" -d '{"username": "test", "password": "testpassword"}'
 
-curl -X POST http://localhost:8050/api/auth/login/ -H "Content-Type: application/json" -d '{"username": "test.user.17596323", "password": "testpassword"}'
+curl -X POST http://localhost:8050/api/auth/login/ -H "Content-Type: application/json" -d '{"username": "test.user.17603220", "password": "testpassword"}'
 
 # Serviço de AI
 ## Java - Spring Boot
@@ -28,18 +28,12 @@ curl -X POST http://localhost:8070/api/ai/chat -d '{"prompt": "O que é um pront
 
 
 
-test.user.17596323
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5NjcxOTUzLCJpYXQiOjE3NTk2NjgzNTN9.2XGsn_7YQw6WD5gBO0OjY7O_44-SB3HRcUyVueuBqAM
-
-test.user.17596060
-
 id
-91075dee-eb91-42d8-97d2-c8bf2766e963
-Paciente Teste 17596060
+abeb8432-4669-4d82-912c-a59e6a527d81
+Paciente Teste 17602779
+Paciente.Teste.17602779
+test.user.17602779
 
-0888f4a8-4a54-42e3-a8b3-118fedb191cc
-17596061
-
-dd057a7e-db95-4977-bdef-5a9591f442e3
-17596323
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZGQwNTdhN2UtZGI5NS00OTc3LWJkZWYtNWE5NTkxZjQ0MmUzIiwiZXhwIjoxNzU5ODA2OTE1LCJpYXQiOjE3NTk4MDMzMTV9.Mxei8foyQqnmADPJwq5sR1NyChvobHbVoxj38Rye2EA
+fec052b2-b303-4d6a-b9e2-59c28ccb4d29
+test.user.17603220
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmVjMDUyYjItYjMwMy00ZDZhLWI5ZTItNTljMjhjY2I0ZDI5IiwiZXhwIjoxNzYwMzI1OTM2LCJpYXQiOjE3NjAzMjIzMzZ9.O9ozxc9rTQEVKFyUopQ6GMOM5Hrn-WeipIBbEZWc7YA

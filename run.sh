@@ -146,6 +146,76 @@ seed_data() {
     docker compose run --rm "$MONO_SERVICE" python seed/seed_permissions.py
 }
 
+edit_patient(){
+    info "Editar usuários após o Seed permissions para dar permissões, precisa ter 4 usuários"
+    # from django.db import transaction
+    # from .models import Paciente, Role
+
+    # def editar_e_atribuir_role(paciente_id, novos_dados, nome_da_role):
+    #     """
+    #     Edita os dados de um paciente e associa a Role (perfil) especificada.
+    #     """
+    #     try:
+    #         # Tenta obter o paciente pelo ID
+    #         paciente = Paciente.objects.get(id=paciente_id)
+            
+    #         # Tenta obter a Role pelo nome (ex: 'medico', 'paciente')
+    #         role_alvo = Role.objects.get(nome=nome_da_role)
+
+    #     except Paciente.DoesNotExist:
+    #         # Se o paciente nÃ£o existir
+    #         print(f"Erro: Paciente com ID {paciente_id} nÃ£o encontrado.")
+    #         return False
+    #     except Role.DoesNotExist:
+    #         # Se a role nÃ£o existir (Ã³timo ponto para um teste de seguranÃ§a/integraÃ§Ã£o)
+    #         print(f"Erro: Role '{nome_da_role}' nÃ£o encontrada no sistema.")
+    #         return False
+        
+    #     # Se ambos foram encontrados, procedemos Ã  ediÃ§Ã£o dentro de uma transaÃ§Ã£o atÃ´mica
+    
+    # try:
+    #         with transaction.atomic():
+    #             # 2.1. Aplicar Novas InformaÃ§Ãµes (EdiÃ§Ã£o)
+    #             # Supondo que 'novos_dados' Ã© um dicionÃ¡rio (ex: {'nome': 'Novo Nome'})
+    #             for campo, valor in novos_dados.items():
+    #                 setattr(paciente, campo, valor)
+                
+    #             # 2.2. Associar a Nova Role (AtribuiÃ§Ã£o de PermissÃ£o)
+    #             paciente.role = role_alvo  # O objeto Role Ã© atribuÃ­do ao campo ForeignKey
+                
+    #             # 2.3. Salvar as alteraÃ§Ãµes no banco de dados
+    #             paciente.save()
+                
+    #             print(f"Paciente '{paciente.nome}' (ID: {paciente.id}) editado e agora com a Role: {role_alvo.nome}")
+    #             return True
+    
+    # except Exception as e:
+    #     # A transaÃ§Ã£o serÃ¡ revertida (rollback) se houver qualquer erro
+    #     print(f"Erro ao salvar paciente e role: {e}")
+    #     return False
+
+    #     # Exemplo de como chamar a funÃ§Ã£o para um teste:
+        
+    #     # 1. Dados que o usuÃ¡rio quer atualizar
+    #     dados_para_atualizar = {
+    #         'nome': 'JoÃ£o da Silva Atualizado',
+    #         'data_nascimento': '1985-06-15' # Ajuste o formato conforme seu modelo
+    #     }
+        
+    #     # 2. Executar a funÃ§Ã£o
+    #     sucesso = editar_e_atribuir_role(
+    #         paciente_id=1,                       # ID do paciente que estÃ¡ sendo editado
+    #         novos_dados=dados_para_atualizar,
+    #         nome_da_role='medico'               # Role que queremos atribuir
+    #     )
+        
+    #     if sucesso:
+    #         print("\nOperaÃ§Ã£o concluÃ­da com sucesso no banco de dados.")
+    #     else:
+    #         print("\nOperaÃ§Ã£o falhou. TransaÃ§Ã£o desfeita.")
+
+}
+
 register_patient(){
     #curl -X POST http://localhost:8050/api/patients/register/ -H "Content-Type: application/json" -d '{"username": "joao.silva","password": "senha123","nome_completo": "João da Silva","cpf": "123.456.789-00"}'
 

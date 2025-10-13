@@ -26,8 +26,8 @@ INSTALLED_APPS = [
     'patients',
     'sghss_core',
     
-    # Third party apps
-    'corsheaders',  # ⭐ IMPORTANTE: Adicione esta linha
+    # Third party apps - Antes do POST navegadores pede preflight
+    'corsheaders',  # IMPORTANTE: Para permitir o serviço responder as requisições OPTIONS ("preflight")
     #'rest_framework',
 ]
 
@@ -49,7 +49,7 @@ TEMPLATES = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # ⭐ IMPORTANTE: Adicione ANTES do CommonMiddleware
+    'corsheaders.middleware.CorsMiddleware',  # IMPORTANTE: Adicione ANTES do CommonMiddleware precisa vir antes para gerar respostas
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -163,9 +163,10 @@ CORS_ALLOW_CREDENTIALS = True
 # ⭐ OPÇÃO 1: Permitir origens específicas (RECOMENDADO PARA PRODUÇÃO)
 #antigo CORS_ALLOWED_ORIGINS = [    "http://localhost:8080", "http://127.0.0.1:8080",    "http://localhost:3000", ] # Se usar React/Vue em desenvolvimento
 #Origens permitidas - frontend pode estar em diferentes portas
+CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = os.environ.get(
     'CORS_ALLOWED_ORIGINS',
-    'http://localhost:8000,http://127.0.0.1:8050,http://localhost:3000'
+    'http://localhost:8000,http://127.0.0.1:8050,http://localhost:3000, http://0.0.0.0:8000'
 ).split(',')
 
 # ⭐ OPÇÃO 2: Permitir TODAS as origens (APENAS PARA DESENVOLVIMENTO)

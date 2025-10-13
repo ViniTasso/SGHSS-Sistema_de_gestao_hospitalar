@@ -53,7 +53,10 @@ def seed_permissions():
     """
     Cria as roles e permissions necessárias para o projeto.
 
-        O with transaction.atomic(): Ele garante que todas as etapas dentro do bloco sejam concluídas com sucesso. Se alguma coisa der errado em qualquer uma das etapas, o Django automaticamente desfaz todas as alterações que foram feitas no banco de dados.
+        O with transaction.atomic(): 
+            Ele garante que todas as etapas dentro do bloco sejam concluídas com sucesso. 
+            Se alguma coisa der errado em qualquer uma das etapas, o Django automaticamente desfaz 
+            todas as alterações que foram feitas no banco de dados.
     """
     print("Iniciando a criação das roles e permissões...")
 
@@ -61,7 +64,9 @@ def seed_permissions():
         with transaction.atomic():
             # Criação das Roles
             paciente_role, created = Role.objects.get_or_create(nome='paciente')
-            profissional_role, _ = Role.objects.get_or_create(nome='profissional')
+            medico_role, _ = Role.objects.get_or_create(nome='medico')
+            enfermeiro_role, _ = Role.objects.get_or_create(nome='enfermeiro')
+            enfermeiro_tecnico_role, _ = Role.objects.get_or_create(nome='enfermeiro_tecnico')
             admin_role, _ = Role.objects.get_or_create(nome='administrador')
 
             if created:
@@ -72,14 +77,113 @@ def seed_permissions():
                 nome_acao='visualizar_prontuario',
                 defaults={'descricao': 'Pode visualizar prontuários de pacientes.'}
             )
-
+            agendar_consulta, _ = Permission.objects.get_or_create(
+                nome_acao='agendar_consulta',
+                defaults={'descricao': 'Pode agendar consultas.'}
+            )
+            telemedicina, _ = Permission.objects.get_or_create(
+                nome_acao='telemedicina',
+                defaults={'descricao': 'Pode realizar chamadas de telemedicina.'}
+            )
+            criar_prescricao, _ = Permission.objects.get_or_create(
+                nome_acao='criar_prescricao',
+                defaults={'descricao': 'Pode criar priscrições para pacientes.'}
+            )
+            solicitar_exames, _ = Permission.objects.get_or_create(
+                nome_acao='solicitar_exames',
+                defaults={'descricao': 'Pode criar solicitação para exames.'}
+            )
+            visualizar_consultas, _ = Permission.objects.get_or_create(
+                nome_acao='visualizar_consultas',
+                defaults={'descricao': 'Pode visualizar as consultas.'}
+            )
+            gerenciar_leitos, _ = Permission.objects.get_or_create(
+                nome_acao='gerenciar_leitos',
+                defaults={'descricao': 'Pode realizar a gerência de leitos.'}
+            )
+            gerenciar_suprimentos, _ = Permission.objects.get_or_create(
+                nome_acao='gerenciar_suprimentos',
+                defaults={'descricao': 'Pode realizar a gerência de suprimentos.'}
+            )
+            dashboard, _ = Permission.objects.get_or_create(
+                nome_acao='dashboard',
+                defaults={'descricao': 'Pode acessar página de dashboard.'}
+            )
+            prontuarios, _ = Permission.objects.get_or_create(
+                nome_acao='prontuarios',
+                defaults={'descricao': 'Pode acessar página de prontuarios.'}
+            )
+            prescricoes, _ = Permission.objects.get_or_create(
+                nome_acao='prescricoes',
+                defaults={'descricao': 'Pode acessar página de prescricoes.'}
+            )
+            leitos, _ = Permission.objects.get_or_create(
+                nome_acao='leitos',
+                defaults={'descricao': 'Pode acessar página de leitos.'}
+            )
             if created:
                 print(f"Permissão '{visualizar_prontuario.nome_acao}' criada com sucesso.")
 
             # Associação da Permissão com a Role
             RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=leitos
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=gerenciar_suprimentos
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=gerenciar_leitos
+            )
+            RolePermission.objects.get_or_create(
+                role=medico_role,
+                permission=prescricoes
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=prontuarios
+            )
+            RolePermission.objects.get_or_create(
+                role=paciente_role,
+                permission=visualizar_consultas
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=visualizar_consultas
+            )
+            RolePermission.objects.get_or_create(
+                role=medico_role,
+                permission=solicitar_exames
+            )
+            RolePermission.objects.get_or_create(
+                role=medico_role,
+                permission=visualizar_prontuario
+            )
+            RolePermission.objects.get_or_create(
                 role=paciente_role,
                 permission=visualizar_prontuario
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=visualizar_prontuario
+            )
+            RolePermission.objects.get_or_create(
+                role=paciente_role,
+                permission=dashboard
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_tecnico_role,
+                permission=dashboard
+            )
+            RolePermission.objects.get_or_create(
+                role=enfermeiro_role,
+                permission=dashboard
+            )
+            RolePermission.objects.get_or_create(
+                role=medico_role,
+                permission=dashboard
             )
             print("Permissões associadas com sucesso.")
 
@@ -87,5 +191,35 @@ def seed_permissions():
         print(f"Erro ao criar permissões: {e}")
         sys.exit(1)
 
+def cleanup_permissions():
+    """
+    Exclui todos os dados relacionados a Roles, Permissions e associações,
+    garantindo que o próximo seed comece do zero.
+    """
+    print("Iniciando a exclusão de todas as Roles, Permissões e associações...")
+
+    try:
+        with transaction.atomic():
+            # 1. Excluir Associações (Foreign Keys)
+            # É crucial remover as associações (RolePermission) primeiro, 
+            # pois elas têm chaves estrangeiras para Role e Permission.
+            deleted_rp_count, _ = RolePermission.objects.all().delete()
+            print(f"-> Associações RolePermission excluídas: {deleted_rp_count}")
+            
+            # 2. Excluir Roles
+            deleted_role_count, _ = Role.objects.all().delete()
+            print(f"-> Roles excluídas: {deleted_role_count}")
+
+            # 3. Excluir Permissões
+            deleted_perm_count, _ = Permission.objects.all().delete()
+            print(f"-> Permissões excluídas: {deleted_perm_count}")
+
+            print("Limpeza de permissões concluída com sucesso. O banco está pronto para um novo SEED.")
+
+    except Exception as e:
+        print(f"Erro ao excluir permissões e roles: {e}")
+        sys.exit(1)
+
 if __name__ == "__main__":
+    cleanup_permissions()
     seed_permissions()

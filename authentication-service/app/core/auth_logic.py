@@ -101,7 +101,7 @@ def verificar_credenciais(username, password):
 
         if result:
             user_id, hashed_password = result
-            logging.warning(f"DEBUG: Hashed Password Recuperado: '{hashed_password}'")
+            #logging.warning(f"DEBUG: Hashed Password Recuperado: '{hashed_password}'")
         
             # Verifica se a senha fornecida corresponde ao hash armazenado
             # O pwd_context usa a biblioteca passlib para validar hashes Django PBKDF2
@@ -110,7 +110,9 @@ def verificar_credenciais(username, password):
             else:
                 return None, "Credenciais invalidas."
         
-        return None, "Credenciais inválidas. O hashed_password é "+hashed_password
+            return None, f"Credenciais inválidas. O hashed_password do usuário {username} é: "+ str(password)
+
+        return None, f"Usuario nao encontrado. Verifique o nome e tente novamente"
 
     # 1. Erros de Banco de Dados: SyntaxError, UndefinedTable, etc.
     # DatabaseError é a base para todos os erros de dados e SQL do psycopg2
@@ -192,6 +194,32 @@ def decode_token(token):
         return None
         
 # Função para buscar as permissões no PostgreSQL
+def get_user_permission(user_id, permission):
+    conn = get_postgres_conn()
+    if not conn:
+        return []
+
+    # SQL que busca todas as permissões associadas à Role do usuário
+    sql = """
+    SELECT T2.nome ,T4.nome_acao
+    FROM accounts_user AS T1
+    JOIN accounts_role AS T2 ON T1.role_id = T2.id
+    JOIN accounts_rolepermission AS T3 ON T2.id = T3.role_id
+    JOIN accounts_permission AS T4 ON T4.id = T3.permission_id
+    WHERE T1.id = %s 
+    AND T4.nome_acao = %s;
+    """
+    #SELECT T2.nome ,T4.nome_acao FROM accounts_user AS T1 JOIN accounts_role AS T2 ON T1.role_id = T2.id JOIN accounts_rolepermission AS T3 ON T2.id = T3.role_id JOIN accounts_permission AS T4 ON T4.id = T3.permission_id WHERE T1.id = 'fec052b2-b303-4d6a-b9e2-59c28ccb4d29' AND T4.nome_acao = visualizar_prontuario;
+    try:
+        logging.warning("Tentativa de execucao da Query.")
+        with conn.cursor() as cur:
+            cur.execute(sql, (user_id,))
+            # Retorna uma lista de strings de permissões (ex: ['visualizar_prontuario'])
+            return [row[0] for row in cur.fetchall()]
+    except Exception as e:
+        logging.warning("Erro ao buscar permissões: {e}")
+        return []
+
 def get_user_permissions(user_id):
     conn = get_postgres_conn()
     if not conn:
@@ -199,10 +227,11 @@ def get_user_permissions(user_id):
 
     # SQL que busca todas as permissões associadas à Role do usuário
     sql = """
-    SELECT T2.nome 
-    FROM accounts_user AS T1
-    JOIN accounts_role AS T2 ON T1.role_id = T2.id
-    JOIN accounts_rolepermission AS T3 ON T2.id = T3.role_id
+    SELECT T4.nome_acao 
+    FROM accounts_user AS T1 
+    JOIN accounts_role AS T2 ON T1.role_id = T2.id 
+    JOIN accounts_rolepermission AS T3 ON T2.id = T3.role_id 
+    JOIN accounts_permission AS T4 ON T4.id = T3.permission_id 
     WHERE T1.id = %s;
     """
     
@@ -215,3 +244,29 @@ def get_user_permissions(user_id):
     except Exception as e:
         logging.warning("Erro ao buscar permissões: {e}")
         return []
+
+def get_user_role(user_id):
+    conn = get_postgres_conn()
+    if not conn:
+        return []
+
+    # SQL que busca todas as permissões associadas à Role do usuário
+    sql = """
+    SELECT T2.nome 
+    FROM accounts_user AS T1 
+    JOIN accounts_role AS T2 ON T1.role_id = T2.id 
+    WHERE T1.id = %s;
+    """
+    
+    try:
+        logging.warning("Tentativa de execucao da Query.")
+        with conn.cursor() as cur:
+            cur.execute(sql, (user_id,))
+            # Retorna uma lista de strings de permissões (ex: ['visualizar_prontuario'])
+            return [row[0] for row in cur.fetchall()]
+    except Exception as e:
+        logging.warning("Erro ao buscar permissões: {e}")
+        return []
+
+
+#SELECT T2.nome, T4.nome_acao FROM accounts_user AS T1 JOIN accounts_role AS T2 ON T1.role_id = T2.id JOIN accounts_rolepermission AS T3 ON T2.id = T3.role_id JOIN accounts_permission AS T4 ON T4.id = T3.permission_id WHERE T1.id = 'fec052b2-b303-4d6a-b9e2-59c28ccb4d29';
